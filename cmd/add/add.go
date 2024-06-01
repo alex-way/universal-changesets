@@ -49,6 +49,7 @@ func getTypeOrPrompt(cCtx *cli.Context) (version.IncrementType, error) {
 				huh.NewOption("Major", version.Major),
 				huh.NewOption("Minor", version.Minor),
 				huh.NewOption("Patch", version.Patch),
+				huh.NewOption("Other", version.None),
 			).
 			Value(&changeset_type).
 			Run()

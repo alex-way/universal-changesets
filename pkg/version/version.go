@@ -23,7 +23,7 @@ func (increment_type IncrementType) String() string {
 	case Patch:
 		return "patch"
 	}
-	return ""
+	return "none"
 }
 
 func ParseIncrementType(s string) (IncrementType, error) {
@@ -43,6 +43,7 @@ const (
 	Major IncrementType = iota
 	Minor
 	Patch
+	None
 )
 
 func (cs *Version) Increment(t IncrementType) {

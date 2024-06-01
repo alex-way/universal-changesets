@@ -6,6 +6,7 @@ import (
 	"io"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/alex-way/changesets/pkg/version"
@@ -53,7 +54,7 @@ func CreateChangeset(incrementType version.IncrementType, message string) string
 		}
 	}
 
-	filepath := CHANGESET_DIRECTORY + "/" + filename + ".md"
+	filepath := filepath.Join(CHANGESET_DIRECTORY, filename+".md")
 
 	file, err := os.Create(filepath)
 	if err != nil {
@@ -61,7 +62,7 @@ func CreateChangeset(incrementType version.IncrementType, message string) string
 	}
 	defer file.Close()
 
-	file_contents := "---\n" + "type: " + incrementType.String() + "\n" + "---\n\n# " + message + "\n"
+	file_contents := "---\n" + "changeset/type: " + incrementType.String() + "\n" + "---\n\n# " + message + "\n"
 
 	_, err = file.WriteString(file_contents)
 	if err != nil {
