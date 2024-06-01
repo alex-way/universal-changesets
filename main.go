@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/alex-way/changesets/cmd/add"
+	"github.com/alex-way/changesets/cmd/get_version"
 	"github.com/alex-way/changesets/cmd/version"
 	"github.com/urfave/cli/v2"
 )
@@ -16,8 +17,7 @@ var addFlags = []cli.Flag{
 
 func main() {
 	app := &cli.App{
-		Name:   "changeset",
-		Action: add.Run,
+		Name: "changeset",
 		Commands: []*cli.Command{
 			{
 				Name:   "add",
@@ -31,6 +31,10 @@ func main() {
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "dry-run"},
 				},
+			},
+			{
+				Name:   "get-version",
+				Action: get_version.Run,
 			},
 		},
 	}

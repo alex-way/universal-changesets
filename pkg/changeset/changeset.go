@@ -85,18 +85,15 @@ func (cs *Changeset) DetermineFinalBumpType() version.BumpType {
 }
 
 func GetChanges() ([]Change, error) {
-	files, err := os.ReadDir(CHANGESET_DIRECTORY)
+	files, err := filepath.Glob(CHANGESET_DIRECTORY + "/*.md")
+
 	if err != nil {
 		panic(err)
 	}
 
 	var changes []Change
 
-	for _, file := range files {
-		if file.IsDir() {
-			continue
-		}
-		filepath := CHANGESET_DIRECTORY + "/" + file.Name()
+	for _, filepath := range files {
 		file, err := os.Open(filepath)
 		if err != nil {
 			panic(err)

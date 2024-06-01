@@ -9,7 +9,7 @@ It's based on the existing [changesets](https://github.com/changesets/changesets
 ### Adding a changeset
 
 ```bash
-changeset add --bump-type major --message "Added a new feature" # or simply `changeset add`, or even `changeset`
+changeset add --bump-type major --message "Added a new feature" # or simply `changeset add`
 ```
 
 ### Consuming changesets
@@ -17,6 +17,14 @@ changeset add --bump-type major --message "Added a new feature" # or simply `cha
 ```bash
 changeset version
 ```
+
+### Getting the current version
+
+```bash
+changeset get-version
+```
+
+A dry run can be performed by passing the `--dry-run` flag.
 
 This will output the highest version type found in the `.changeset` directory and the changesets that were found.
 
@@ -27,6 +35,7 @@ This will output the highest version type found in the `.changeset` directory an
 - [ ] Add support for parsing the current version from one of the supported project files
 - [ ] Add support for creating and amending a `CHANGELOG.md` file
 - [ ] Add support for consuming changesets and updating the version in supported project files:
+  - [ ] Unsupported project files (`.changeset/version` file)
   - [ ] pyproject.toml
   - [ ] package.json
   - [ ] Cargo.toml
