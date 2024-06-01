@@ -1,8 +1,3 @@
-// package main
-
-//	func main() {
-//		println("Hello, World!")
-//	}
 package add
 
 import (
@@ -13,8 +8,8 @@ import (
 )
 
 type AddCtx struct {
-	Type    version.IncrementType
-	Message string
+	BumpType version.BumpType
+	Message  string
 }
 
 func getMessageOrPrompt(cCtx *cli.Context) (string, error) {
@@ -31,19 +26,19 @@ func getMessageOrPrompt(cCtx *cli.Context) (string, error) {
 	return message, nil
 }
 
-func getTypeOrPrompt(cCtx *cli.Context) (version.IncrementType, error) {
+func getBumpTypeOrPrompt(cCtx *cli.Context) (version.BumpType, error) {
 	type_ := cCtx.String("type")
-	var changeset_type version.IncrementType
+	var bump_type version.BumpType
 
 	if type_ != "" {
-		parsed_type, err := version.ParseIncrementType(type_)
+		parsed_type, err := version.ParseBumpType(type_)
 		if err != nil {
 			return 0, cli.Exit(err, 1)
 		}
-		changeset_type = parsed_type
+		bump_type = parsed_type
 	} else {
 
-		err := huh.NewSelect[version.IncrementType]().
+		err := huh.NewSelect[version.BumpType]().
 			Title("Type of change").
 			Options(
 				huh.NewOption("Major", version.Major),
@@ -51,18 +46,18 @@ func getTypeOrPrompt(cCtx *cli.Context) (version.IncrementType, error) {
 				huh.NewOption("Patch", version.Patch),
 				huh.NewOption("Other", version.None),
 			).
-			Value(&changeset_type).
+			Value(&bump_type).
 			Run()
 
 		if err != nil {
 			return 0, cli.Exit(err, 1)
 		}
 	}
-	return changeset_type, nil
+	return bump_type, nil
 }
 
 func Run(cCtx *cli.Context) error {
-	changeset_type, err := getTypeOrPrompt(cCtx)
+	bump_type, err := getBumpTypeOrPrompt(cCtx)
 	if err != nil {
 		return cli.Exit(err, 1)
 	}
@@ -71,7 +66,10 @@ func Run(cCtx *cli.Context) error {
 		return cli.Exit(err, 1)
 	}
 
-	changeset_filepath := changeset.CreateChangeset(changeset_type, message)
+	changeset_filepath, err := changeset.CreateChangeFile(bump_type, message)
+	if err != nil {
+		return cli.Exit(err, 1)
+	}
 
 	println("Created changeset " + changeset_filepath)
 	println("You can now edit the file and commit it to version control.")
