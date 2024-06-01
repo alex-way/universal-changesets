@@ -20,6 +20,7 @@ func Run(cCtx *cli.Context) error {
 	}
 
 	_changeset := changeset.Changeset{
+		// todo: Get the current version from a versioned file
 		CurrentVersion: version.Version{Major: 0, Minor: 0, Patch: 0},
 		Changes:        changes,
 	}
