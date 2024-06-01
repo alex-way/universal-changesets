@@ -35,7 +35,7 @@ This will output the highest version type found in the `.changeset` directory an
 - [ ] Add support for parsing the current version from one of the supported project files
 - [ ] Add support for creating and amending a `CHANGELOG.md` file
 - [ ] Add support for consuming changesets and updating the version in supported project files:
-  - [ ] Unsupported project files (`.changeset/version` file)
+  - [x] Unsupported project files (`.changeset/version` file)
   - [ ] pyproject.toml
   - [ ] package.json
   - [ ] Cargo.toml
