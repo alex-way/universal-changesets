@@ -31,6 +31,8 @@ This will output the highest version type found in the `.changeset` directory an
 ## TODO
 
 - [x] Add support for creating a new changeset
+- [ ] Plugin support for reading/writing the version to/from a file
+  - [ ] Maybe allow the cli itself to install & manage plugins? `changeset plugin install <plugin-name>`
 - [ ] Add support for publishing a changeset
 - [ ] Add support for parsing the current version from one of the supported project files
 - [ ] Add support for creating and amending a `CHANGELOG.md` file
