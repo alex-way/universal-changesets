@@ -32,10 +32,11 @@ This will output the highest version type found in the `.changeset` directory an
 
 - [x] Add support for creating a new changeset
 - [ ] Plugin support for reading/writing the version to/from a file
-  - [ ] Maybe allow the cli itself to install & manage plugins? `changeset plugin install <plugin-name>`
+  - [x] Maybe allow the cli itself to install & manage plugins? `changeset plugin install <plugin-name>`
 - [ ] Add support for publishing a changeset
-- [ ] Add support for parsing the current version from one of the supported project files
+- [x] Add support for parsing the current version from one of the supported project files
 - [ ] Add support for creating and amending a `CHANGELOG.md` file
+- [ ] Add a command to preview the `CHANGELOG.md` file prefix before publishing. `changeset preview`
 - [ ] Add support for consuming changesets and updating the version in supported project files:
   - [x] Unsupported project files (`.changeset/version` file)
   - [ ] pyproject.toml
@@ -45,3 +46,30 @@ This will output the highest version type found in the `.changeset` directory an
 - [ ] Add support for auto-committing changesets (via `--autocommit` flag for `changeset add`)
 - [ ] Add support for tagging releases in git (via `--tag` flag for `changeset add`)
 - [ ] Add support for an additional number in the version (e.g. `1.2.3.4`). This is for projects which are an add-on to existing projects.
+
+## Plugins
+
+### VersionedFile
+
+This plugin is used to read/write the version to/from a plain file.
+
+The file must be a plain text file with the following format:
+
+```text
+1.2.3
+```
+
+Example config file:
+
+```json
+{
+  "plugin": {
+    "name": "versionfile",
+    "sha256": "beef1de60035053ad01eff83875999dc9918a65e1cffc006fca95c3bfbe55d70",
+    "url": "https://github.com/alex-way/changesets-go-versionfile-plugin/releases/download/0.0.1/versionfile.wasm",
+    "versionedFile": ".changeset/version"
+  }
+}
+```
+
+## Implementing your own plugin
