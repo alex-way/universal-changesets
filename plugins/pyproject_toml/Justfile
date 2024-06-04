@@ -1,8 +1,0 @@
-build:
-	cargo build --release --target wasm32-wasi
-
-buildme:
-    rustc -o lib.wasm --target wasm32-wasi -C opt-level="z"  --crate-type cdylib src/lib.rs
-
-build-pack:
-    wasm-pack build
