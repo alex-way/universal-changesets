@@ -46,6 +46,7 @@ This will output the highest version type found in the `.changeset` directory an
 - [ ] Add support for auto-committing changesets (via `--autocommit` flag for `changeset add`)
 - [ ] Add support for tagging releases in git (via `--tag` flag for `changeset add`)
 - [ ] Add support for an additional number in the version (e.g. `1.2.3.4`). This is for projects which are an add-on to existing projects.
+- [ ] Side-car repo for bot to manage releases via a pull request
 
 ## Plugins
 

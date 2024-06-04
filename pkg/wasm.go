@@ -11,6 +11,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"os/user"
 	"path/filepath"
 	"strings"
 
@@ -117,7 +118,16 @@ func (r *Runner) loadAndCompile(ctx context.Context) (*runtimeAndCode, error) {
 	if err != nil {
 		return nil, err
 	}
-	cacheDir := filepath.Join("plugeroos")
+
+	currentUser, err := user.Current()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return nil, err
+	}
+
+	home_dir := currentUser.HomeDir
+
+	cacheDir := filepath.Join(home_dir, ".cache", "changesets")
 	value, err, _ := flight.Do(expected_sha, func() (interface{}, error) {
 		return r.loadAndCompileWASM(ctx, cacheDir, expected_sha)
 	})
