@@ -35,6 +35,8 @@ This will output the highest version type found in the `.changeset` directory an
   - [x] Maybe allow the cli itself to install & manage plugins? `changeset plugin install <plugin-name>`
 - [x] Add support for publishing a changeset
 - [x] Add support for parsing the current version from one of the supported project files
+- [ ] Reduce the FS permissions to just the versioned file within the configuration
+- [ ] Add documentation site
 - [ ] Add support for creating and amending a `CHANGELOG.md` file
 - [ ] Add a command to preview the `CHANGELOG.md` file prefix before publishing. `changeset preview`
 - [ ] Add support for consuming changesets and updating the version in supported project files:
