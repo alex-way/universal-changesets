@@ -1,48 +1,53 @@
 package version
 
 import (
+	"context"
 	"fmt"
-	"io"
-	"os"
-	"path/filepath"
 
+	"github.com/alex-way/changesets/cmd/get_version"
+	wasm "github.com/alex-way/changesets/pkg"
 	"github.com/alex-way/changesets/pkg/changeset"
+	"github.com/alex-way/changesets/pkg/config"
+	"github.com/alex-way/changesets/pkg/plugin"
 	"github.com/alex-way/changesets/pkg/version"
 	"github.com/urfave/cli/v2"
 )
 
-func writeVersionFile(version version.Version) error {
-	filepath := filepath.Join(changeset.CHANGESET_DIRECTORY, "version")
-	file, err := os.Create(filepath)
+func setVersion(version version.Version) error {
+	_config, err := config.GetConfig()
 	if err != nil {
-		return err
+		return cli.Exit(err, 1)
 	}
-	defer file.Close()
 
-	_, err = file.WriteString(version.String())
-	if err != nil {
-		return err
+	handler := &wasm.Runner{
+		Plugin: _config.Plugin,
 	}
+	client := plugin.NewVersionGetterSetterServiceClient(handler)
+
+	req := &plugin.RequestMessage{
+		Request: &plugin.RequestMessage_SetVersion{
+			SetVersion: &plugin.SetVersionRequest{
+				FilePath: _config.Plugin.VersionedFile,
+				Version:  version.String(),
+			},
+		},
+	}
+
+	ctx := context.Background()
+	resp, err := client.Request(ctx, req)
+	if err != nil {
+		message := fmt.Sprintf("failed to set version: %v", err)
+		return cli.Exit(message, 1)
+	}
+
+	if resp.Status.Code != 0 {
+		message := fmt.Sprintf(resp.Status.Message)
+		return cli.Exit(message, 1)
+	}
+
+	println(("You got it boss"))
+
 	return nil
-}
-
-func ReadVersionFile() (version.Version, error) {
-	filepath := filepath.Join(changeset.CHANGESET_DIRECTORY, "version")
-	if _, err := os.Stat(filepath); os.IsNotExist(err) {
-		return version.Version{Major: 0, Minor: 0, Patch: 0}, nil
-	}
-	file, err := os.Open(filepath)
-	if err != nil {
-		return version.Version{}, err
-	}
-	defer file.Close()
-
-	contents, err := io.ReadAll(file)
-	if err != nil {
-		return version.Version{}, err
-	}
-
-	return version.ParseVersion(string(contents))
 }
 
 func Run(cCtx *cli.Context) error {
@@ -56,7 +61,7 @@ func Run(cCtx *cli.Context) error {
 		return nil
 	}
 
-	current_version, err := ReadVersionFile()
+	current_version, err := get_version.GetVersion()
 	if err != nil {
 		return cli.Exit(err, 1)
 	}
@@ -86,7 +91,7 @@ func Run(cCtx *cli.Context) error {
 		return cli.Exit(err, 1)
 	}
 
-	if err := writeVersionFile(next_version); err != nil {
+	if err := setVersion(next_version); err != nil {
 		return cli.Exit(err, 1)
 	}
 

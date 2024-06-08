@@ -55,7 +55,23 @@ func (fsys *RestrictedFS) Open(name string) (fs.File, error) {
 	if name != "." && name != fsys.target {
 		return nil, fmt.Errorf("access denied to file: %s", name)
 	}
-	return os.Open(name)
+
+	// if the thing trying to be opened is a directory, return a readable file
+	if stat, err := os.Stat(name); err == nil && stat.IsDir() {
+		println("Opening a directory")
+		return os.Open(name)
+	}
+	println("Opening a file")
+	file, err := os.OpenFile(name, os.O_RDWR|os.O_APPEND, 0644)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	return file, nil
+}
+
+func (fsys *RestrictedFS) Write(name string, data []byte) (int, error) {
+	return 0, fmt.Errorf("write not allowed")
 }
 
 // Attempts to fetch the wasm file from either a URL or a local file depending on the prefix of the URL
@@ -109,7 +125,7 @@ func (r *Runner) getChecksum(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	slog.Warn("fetching WASM binary to calculate sha256. Set this value in sqlc.yaml to prevent unneeded work", "sha256", sum)
+	slog.Warn("fetching WASM binary to calculate sha256. Set this value in your config file to prevent unneeded work", "sha256", sum)
 	return sum, nil
 }
 
@@ -121,7 +137,7 @@ func (r *Runner) loadAndCompile(ctx context.Context) (*runtimeAndCode, error) {
 
 	currentUser, err := user.Current()
 	if err != nil {
-		fmt.Println("Error:", err)
+		slog.Error("Error:", err)
 		return nil, err
 	}
 
@@ -200,7 +216,7 @@ func (r *Runner) Invoke(ctx context.Context, method string, args any, reply any,
 		return status.Error(codes.InvalidArgument, "args isn't a protoreflect.ProtoMessage")
 	}
 
-	genReq, ok := req.(*plugin.GetVersionRequest)
+	genReq, ok := req.(*plugin.RequestMessage)
 	if ok {
 		genReq.ProtoMessage()
 		req = genReq
@@ -218,7 +234,7 @@ func (r *Runner) Invoke(ctx context.Context, method string, args any, reply any,
 
 	var stderr, stdout bytes.Buffer
 
-	fileSystem := NewRestrictedFS(r.Plugin.VersionedFile)
+	// fileSystem := NewRestrictedFS(r.Plugin.VersionedFile)
 
 	//List all files in the rooted directory
 	conf := wazero.NewModuleConfig().
@@ -226,7 +242,7 @@ func (r *Runner) Invoke(ctx context.Context, method string, args any, reply any,
 		WithArgs("plugin.wasm", method).
 		WithStdin(bytes.NewReader(stdinBlob)).
 		WithStdout(&stdout).
-		WithStderr(&stderr).WithFS(fileSystem)
+		WithStderr(&stderr).WithFSConfig(wazero.NewFSConfig().WithDirMount(".", "."))
 
 	result, err := runtimeAndCode.rt.InstantiateModule(ctx, runtimeAndCode.code, conf)
 	if result != nil {
@@ -236,7 +252,6 @@ func (r *Runner) Invoke(ctx context.Context, method string, args any, reply any,
 		return cerr
 	}
 
-	// Print WASM stdout
 	stdoutBlob := stdout.Bytes()
 
 	resp, ok := reply.(protoreflect.ProtoMessage)

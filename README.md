@@ -31,9 +31,9 @@ This will output the highest version type found in the `.changeset` directory an
 ## TODO
 
 - [x] Add support for creating a new changeset
-- [ ] Plugin support for reading/writing the version to/from a file
+- [x] Plugin support for reading/writing the version to/from a file
   - [x] Maybe allow the cli itself to install & manage plugins? `changeset plugin install <plugin-name>`
-- [ ] Add support for publishing a changeset
+- [x] Add support for publishing a changeset
 - [x] Add support for parsing the current version from one of the supported project files
 - [ ] Add support for creating and amending a `CHANGELOG.md` file
 - [ ] Add a command to preview the `CHANGELOG.md` file prefix before publishing. `changeset preview`
@@ -67,7 +67,7 @@ Example config file:
   "plugin": {
     "name": "versionfile",
     "sha256": "beef1de60035053ad01eff83875999dc9918a65e1cffc006fca95c3bfbe55d70",
-    "url": "https://github.com/alex-way/changesets-go-versionfile-plugin/releases/download/0.0.1/versionfile.wasm",
+    "url": "https://github.com/alex-way/changesets-go-versionfile-plugin/releases/download/0.0.2/versionfile.wasm",
     "versionedFile": ".changeset/version"
   }
 }
