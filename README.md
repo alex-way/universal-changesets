@@ -32,14 +32,13 @@ This will output the highest version type found in the `.changeset` directory an
 
 - [x] Add support for creating a new changeset
 - [x] Plugin support for reading/writing the version to/from a file
-  - [x] Maybe allow the cli itself to install & manage plugins? `changeset plugin install <plugin-name>`
+  - [x] Maybe allow the cli itself to install & manage plugins?
 - [x] Add support for publishing a changeset
 - [x] Add support for parsing the current version from one of the supported project files
-- [ ] Reduce the FS permissions to just the versioned file within the configuration
-- [ ] Add documentation site
+- [ ] Documentation site
 - [ ] Add support for creating and amending a `CHANGELOG.md` file
 - [ ] Add a command to preview the `CHANGELOG.md` file prefix before publishing. `changeset preview`
-- [ ] Add support for consuming changesets and updating the version in supported project files:
+- [x] Add support for consuming changesets and updating the version in supported project files:
   - [x] Unsupported project files (`.changeset/version` file)
   - [ ] pyproject.toml
   - [ ] package.json
@@ -48,7 +47,9 @@ This will output the highest version type found in the `.changeset` directory an
 - [ ] Add support for auto-committing changesets (via `--autocommit` flag for `changeset add`)
 - [ ] Add support for tagging releases in git (via `--tag` flag for `changeset add`)
 - [ ] Add support for an additional number in the version (e.g. `1.2.3.4`). This is for projects which are an add-on to existing projects.
-- [ ] Side-car repo for bot to manage releases via a pull request
+- [ ] Side-car repo for bot to manage releases via a pull request, and to detect when a changeset is missing in a PR, or when a changeset is included to detail the version that it will bump to.
+- [ ] Reduce the FS permissions to just the versioned file within the configuration
+- [ ] Blog write-up for how I built it and how it works
 
 ## Plugins
 
